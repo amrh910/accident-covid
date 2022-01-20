@@ -13,23 +13,27 @@
             <div class="col-md-6 col-offset-1 cases">
                 
                 <div style="text-align: right;">
+                    @isset($countries)
                     <select class="selectpicker" placeholder="Select Country" data-live-search="true">
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                        <option value="4">Four</option>
+                        @foreach($countries as $country)
+                            @isset($country['iso2'])
+                                <option value="{{ $country['iso2'] }}">{{ $country['name'] }}</option>
+                            @endisset
+                        @endforeach
                     </select>
+                    @endisset
                     <button class="btn btn-add">Add</button>
                 </div>
                 
                 <br>
+                @isset($world)
                 <div class="card main">
                     <p class="card-title">World</p>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="card stat">
                                 <div class="card-body stat">
-                                    <p>100</p>
+                                    <p>{{ number_format($world['confirmed']) }}</p>
                                 </div>
                                 <div class="card-footer text-danger"><span>Active</span></div>
                             </div>
@@ -37,7 +41,7 @@
                         <div class="col-md-3">
                             <div class="card stat">
                                 <div class="card-body stat">
-                                    <p>100</p>
+                                    <p>{{ number_format($world['recovered']) }}</p>
                                 </div>
                                 <div class="card-footer text-success"><span>Recovered</span></div>
                             </div>
@@ -45,7 +49,7 @@
                         <div class="col-md-3">
                             <div class="card stat">
                                 <div class="card-body stat">
-                                    <p>100</p>
+                                    <p>{{ number_format($world['deaths']) }}</p>
                                 </div>
                                 <div class="card-footer text-warning"><span>Deceased</span></div>
                             </div>
@@ -53,13 +57,14 @@
                         <div class="col-md-3">
                             <div class="card stat">
                                 <div class="card-body stat">
-                                    <p>100</p>
+                                    <p>{{ number_format(intval($world['deaths']) + intval($world['recovered']) + intval($world['confirmed'])) }}</p>
                                 </div>
                                 <div class="card-footer"><span>Total</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endisset
             </div>
         </div>
     </div>

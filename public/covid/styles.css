@@ -110,10 +110,8 @@ input.form-control.key:focus {
     text-align: center;
 }
 .card.stat .card-body p {
-    max-width: 50%;
     text-align: center;
-    font-size: 15px;
-    font-weight: bold;
+    font-size: 12px;
 }
 .stat {
     text-transform: lowercase;
