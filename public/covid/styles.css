@@ -1,0 +1,152 @@
+body {
+    background-color: black;
+}
+
+.navbar-brand {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.navbar-nav.login {
+    margin-left: auto;
+}
+
+.card {
+    margin: auto;
+    margin-top: 10%;
+    background: black;
+    border: 1px solid #6c757d;
+    border-radius: 0;
+    max-width: 60%;
+}
+.card-title {
+    padding: 5%;
+    color: white;
+    text-align: center;
+    justify-content: center;
+}
+.card-body {
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-bottom: 5%;
+    text-align: center;
+    justify-content: center;
+}
+input.form-control {
+    background: black;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #6c757d;
+    border-radius: 0;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+input.form-control:focus {
+    background: black;
+    color: #6c757d;
+    outline: none !important;
+    border:1px solid red;
+    box-shadow: 0 0 10px red;
+}
+input.form-control.key:focus {
+    border:1px solid green;
+    box-shadow: 0 0 10px green;
+}
+.btn-login {
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: black;
+    border:1px solid red;
+    border-radius: 0;
+    color: red;
+    text-transform: uppercase;
+    min-width: 30%;
+}
+.btn-login:hover {
+    border:1px solid green;
+    color: green;
+}
+.pass-error {
+    display: none;
+}
+
+/* map */
+.section {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+.col-md-5.india {
+    border: 1px solid #6c757d;
+    margin: 0 auto;
+    min-height: 600px;
+}
+#india-map {
+    display: block;
+    margin: 0 auto;
+    height: 95%;
+    width: 95%;
+}
+
+/* cases */
+.card.main {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px !important;
+    padding-bottom: 5% !important;
+    padding-top: 5% !important;
+    margin: auto;
+}
+.card.stat {
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+}
+.card.stat .card-body {
+    display: flex;
+    text-align: center;
+}
+.card.stat .card-body p {
+    max-width: 50%;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+.stat {
+    text-transform: lowercase;
+    text-align: center;
+    justify-content: center;
+    color: white;
+    font-weight: lighter;
+} 
+
+/* dropdown */
+
+.dropdown-toggle {
+    background: black !important;
+}
+.bs-searchbox input {
+    background: white !important;
+}
+.btn-add { 
+    background: black;
+    border:1px solid white;
+    border-radius: 0;
+    color: white;
+    text-transform: uppercase;
+}
+.btn-add:hover {
+    border:1px solid green;
+    color: green;
+}
+
+.card.main .card-title {
+    font-weight: bold;
+    margin: 0 !important;
+    text-align: left;
+    padding: 0 !important;
+    padding-bottom: 10px !important;
+}
