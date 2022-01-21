@@ -89,7 +89,9 @@ input.form-control.key:focus {
     height: 95%;
     width: 95%;
 }
-
+.filter-option-inner-inner {
+    color: white;
+}
 /* cases */
 .card.main {
     width: 100%;
@@ -147,4 +149,14 @@ input.form-control.key:focus {
     text-align: left;
     padding: 0 !important;
     padding-bottom: 10px !important;
+}
+
+.heading-text {
+    color: white;
+}
+
+.text-danger.remove {
+    text-align: right;
+    text-decoration: underline;
+    cursor: pointer;
 }

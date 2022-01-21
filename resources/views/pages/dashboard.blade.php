@@ -1,11 +1,8 @@
 @extends('layouts.default')
 
 @section('content')
-    <style>
-        
-    </style>
-
     <div class="section">
+        <p class="heading-text">Welcome {{ Auth::user()->name }}</p>
         <div class="row">
             <div class="col-md-5 india">
                 <div id="india-map"></div>
@@ -14,7 +11,7 @@
                 
                 <div style="text-align: right;">
                     @isset($countries)
-                    <select class="selectpicker" placeholder="Select Country" data-live-search="true">
+                    <select class="selectpicker" placeholder="Select Country" id="country-select" data-live-search="true">
                         @foreach($countries as $country)
                             @isset($country['iso2'])
                                 <option value="{{ $country['iso2'] }}">{{ $country['name'] }}</option>
@@ -22,49 +19,94 @@
                         @endforeach
                     </select>
                     @endisset
-                    <button class="btn btn-add">Add</button>
+                    <button onclick="getCountry();" class="btn btn-add">Add</button>
                 </div>
                 
                 <br>
-                @isset($world)
-                <div class="card main">
-                    <p class="card-title">World</p>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card stat">
-                                <div class="card-body stat">
-                                    <p>{{ number_format($world['confirmed']) }}</p>
+                <div id="countries-container">
+                    @isset($world)
+                    <div class="card main">
+                        <p class="card-title">World</p>
+                        <div class="row">
+                            <div class="col-md-3 confirmed">
+                                <div class="card stat">
+                                    <div class="card-body stat">
+                                        <p>{{ number_format($world['confirmed']) }}</p>
+                                    </div>
+                                    <div class="card-footer text-danger"><span>Active</span></div>
                                 </div>
-                                <div class="card-footer text-danger"><span>Active</span></div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card stat">
-                                <div class="card-body stat">
-                                    <p>{{ number_format($world['recovered']) }}</p>
+                            <div class="col-md-3 recovered">
+                                <div class="card stat">
+                                    <div class="card-body stat">
+                                        <p>{{ number_format($world['recovered']) }}</p>
+                                    </div>
+                                    <div class="card-footer text-success"><span>Recovered</span></div>
                                 </div>
-                                <div class="card-footer text-success"><span>Recovered</span></div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card stat">
-                                <div class="card-body stat">
-                                    <p>{{ number_format($world['deaths']) }}</p>
+                            <div class="col-md-3 dead">
+                                <div class="card stat">
+                                    <div class="card-body stat">
+                                        <p>{{ number_format($world['deaths']) }}</p>
+                                    </div>
+                                    <div class="card-footer text-warning"><span>Deceased</span></div>
                                 </div>
-                                <div class="card-footer text-warning"><span>Deceased</span></div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card stat">
-                                <div class="card-body stat">
-                                    <p>{{ number_format(intval($world['deaths']) + intval($world['recovered']) + intval($world['confirmed'])) }}</p>
+                            <div class="col-md-3 total">
+                                <div class="card stat">
+                                    <div class="card-body stat">
+                                        <p>{{ number_format(intval($world['deaths']) + intval($world['recovered']) + intval($world['confirmed'])) }}</p>
+                                    </div>
+                                    <div class="card-footer"><span>Total</span></div>
                                 </div>
-                                <div class="card-footer"><span>Total</span></div>
                             </div>
+                            {{-- <span class="text-danger remove" onclick="removePref(this, `{{ $dash['code'] }}`);">remove</span> --}}
                         </div>
                     </div>
+                    @endisset
+                    @isset($dashboard)
+                        @foreach($dashboard as $dash)
+                            <div class="card main">
+                                <p class="card-title">{{ $dash['country'] }}</p>
+                                <div class="row">
+                                    <div class="col-md-3 confirmed">
+                                        <div class="card stat">
+                                            <div class="card-body stat">
+                                                <p>{{ number_format($dash['confirmed']) }}</p>
+                                            </div>
+                                            <div class="card-footer text-danger"><span>Active</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 recovered">
+                                        <div class="card stat">
+                                            <div class="card-body stat">
+                                                <p>{{ number_format($dash['recovered']) }}</p>
+                                            </div>
+                                            <div class="card-footer text-success"><span>Recovered</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 dead">
+                                        <div class="card stat">
+                                            <div class="card-body stat">
+                                                <p>{{ number_format($dash['deaths']) }}</p>
+                                            </div>
+                                            <div class="card-footer text-warning"><span>Deceased</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 total">
+                                        <div class="card stat">
+                                            <div class="card-body stat">
+                                                <p>{{ number_format(intval($dash['deaths']) + intval($dash['recovered']) + intval($dash['confirmed'])) }}</p>
+                                            </div>
+                                            <div class="card-footer"><span>Total</span></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger remove" onclick="removePref(this, `{{ $dash['code'] }}`);">remove</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endisset
                 </div>
-                @endisset
             </div>
         </div>
     </div>
@@ -72,8 +114,109 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            mapInit();
+            var map = new Datamap({
+                element: document.getElementById('india-map'),
+                scope: 'india',
+                responsive: true,
+                fills: {
+                    'MAJOR': '#306596',
+                    'MEDIUM': '#0fa0fa',
+                    'MINOR': '#bada55',
+                    defaultFill: '#dddddd'
+                },
+                data: {
+                    @php
+                        foreach($mapdata as $key=>$data)
+                        {
+                            if($key != array_key_last($mapdata))
+                            {
+                                echo "'". $key ."'" .': { deceased: ' . $data["deceased"] . ', confirmed: '. $data["confirmed"]. ', recovered: '. $data["recovered"].' },'."\n";
+                            }
+                            else
+                            {
+                                echo "'" .$key ."'" . ': { deceased: ' . $data["deceased"] . ', confirmed: '. $data["confirmed"]. ', recovered: '. $data["recovered"].' }'."\n";
+                            }
+                        }
+                    @endphp
+                },
+                geographyConfig: {
+                    popupOnHover: true,
+                    highlightOnHover: true,
+                    borderColor: '#444',
+                    borderWidth: 0.5,
+                    dataUrl: 'https://rawgit.com/Anujarya300/bubble_maps/master/data/geography-data/india.topo.json',
+                    popupTemplate: function(geo, data) {
+                        return ['<div class="hoverinfo"><strong>',
+                                '' + geo.properties.name,
+                                '</strong><br> confirmed: ' + data.confirmed,
+                                '<br> recovered: ' + data.recovered,
+                                '<br> deceased: ' + data.deceased,
+                                '</strong></div>'].join('');
+                    }
+                    //dataJson: topoJsonData
+                },
+                setProjection: function (element) {
+                    var projection = d3.geo.mercator()
+                        .center([80, 25]) // always in [East Latitude, North Longitude]
+                        .scale(800)
+                        .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
+                    var path = d3.geo.path().projection(projection);
+                    return { path: path, projection: projection };
+                }
+            });
+            $(window).on('resize', function() {
+                map.resize();
+            });
         });
+
+        function getCountry() {
+            var country = $('#country-select').val();
+            var name = $('#country-select option:selected').text();
+            if(country != '')
+            {
+                $.ajax({
+                    url: "/get-data",
+                    type:"POST",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        country: country,
+                        name: name
+                    },
+                    success:function(response){
+                        let total = parseInt(response.confirmed) + parseInt(response.deaths) + parseInt(response.recovered);
+                        let clone = $('#countries-container').children(':last').clone();
+                        $(clone).children('.card-title').text(response.country);
+                        $(clone).children('.row').children('.confirmed').children('.card').children('.card-body').children('p').text(response.confirmed);
+                        $(clone).children('.row').children('.recovered').children('.card').children('.card-body').children('p').text(response.recovered);
+                        $(clone).children('.row').children('.dead').children('.card').children('.card-body').children('p').text(response.deaths);
+                        $(clone).children('.row').children('.total').children('.card').children('.card-body').children('p').text(total);
+                        $('#countries-container').append(clone);
+                    }
+                });
+            }
+            else
+            {
+                alert('You have to select a country');
+            }
+        }
+
+        function removePref(ele, code) {
+            var parent = $(ele).parent().parent();
+            $.ajax({
+                url: "/remove",
+                type:"POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    country: code
+                },
+                success:function(response){
+                    $(parent).remove();
+                }
+            });
+        }
+
+        
+        
             // var election = new Datamap({
             //     scope: 'ind',
             //     element: document.getElementById('india-map')

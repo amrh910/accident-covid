@@ -3,9 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pref;
+use Auth;
 
 class DefaultController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+    
     function getWorld()
     {
         $curl = curl_init();
@@ -60,9 +67,42 @@ class DefaultController extends Controller
     
     public function index()
     {
-        $countries = $this->countryList();
-        $world = $this->getWorld();
-        
-        return view('pages.dashboard', compact('countries', 'world'));
+        if(Auth::check())
+        {
+            $countries = $this->countryList();
+            $world = $this->getWorld();
+
+            $mapdata = (new ApiController)->getMapData();
+
+            $user = Auth::id();
+            $pref = Pref::where('user', $user)->first();
+
+            if(isset($pref))
+            {
+                $dashboard = array();
+                $myCountry = $pref->pref;
+                $myCountry = json_decode($myCountry, true);
+                
+                foreach($myCountry as $key=>$country)
+                {
+                    $input = new Request();
+                    $input->replace(['country' => $key, 'name' => $country]);
+                    $result = (new ApiController)->getCountry($input);
+                    $result['code'] = $key;
+                    array_push($dashboard, $result);
+                }
+            }
+            else
+            {
+                $dashboard = null;
+            }
+            
+            
+            return view('pages.dashboard', compact('countries', 'world', 'dashboard', 'mapdata'));
+        }
+        else
+        {
+            return view('pages.home');
+        }
     }
 }

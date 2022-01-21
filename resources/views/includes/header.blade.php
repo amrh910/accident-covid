@@ -15,10 +15,13 @@
                 <li class="nav-item">
                     @if($path == "/register")
                         <a class="nav-link" href="/">Login</a>
-                    @elseif($path == "/dashboard")
-                        <a class="nav-link" href="/logout">Log Out</a>
                     @else
-                        <a class="nav-link" href="/register">Sign Up</a>
+                        @if(Auth::check())
+                            <a class="nav-link" href="javascript:void(0)" onclick="$('#logout').submit();">Log Out</a>
+                            <form method="POST" id="logout" action="/logout">@CSRF</form>
+                        @else
+                            <a class="nav-link" href="/register">Sign Up</a>
+                        @endif
                     @endif
                 </li>
             </ul>
